@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="preferenciaDlg" widgetVar="preferenciaDialog"
+		header="Preferência" modal="true" resizable="false" closable="false"
+		draggable="false" showEffect="clip" hideEffect="clip" height="40%">
+		<h:form id="preferencia_form">
+		
+			<p:outputLabel for="preferencia" value="Onde voce prefere cuidar do animal?" />
+			<p:selectOneRadio id="preferencia" value="#{configuracoesMB.usuario.preferencia}">
+			<br/>
+				<f:selectItem itemLabel="Prefiro cuidar do animal na minha casa." itemValue="PROPRIA_CASA" />
+			<br/>
+				<f:selectItem itemLabel="Prefiro cuidar do animal na casa do dono." itemValue="CASA_DONO" />
+			<br/>	
+				<f:selectItem itemLabel="Não tenho preferência." itemValue="NENHUMA" />
+			</p:selectOneRadio>
+			
+			<p:commandButton value="salvar" icon="salvar16"
+				actionListener="#{configuracoesMB.salvar}"
+				oncomplete="if(!args.validationFailed) PF('preferenciaDialog').hide()" />
+
+			<p:commandButton value="Cancelar" icon="cancelar16"
+				oncomplete="PF('preferenciaDialog').hide()" immediate="true"
+				actionListener="#{configuracoesMB.cancelar}" />
+		</h:form>
+	</p:dialog>
+</ui:composition>

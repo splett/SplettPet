@@ -1,0 +1,91 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<p:growl id="msg" showDetail="true"></p:growl>
+		<p:panel id="painelPrincipal" header="Gerenciamento de Animais">
+			<h:form>
+				<p:commandButton id="novoAni" styleClass="botaoCRUD" value="Novo"
+					actionListener="#{animalMB.criar}"
+					oncomplete="PF('aniDialog').show()" update=":aniDlg" />
+			</h:form>
+
+			<h:form id="tableForm">
+				<p:dataTable id="animaisTable" var="ani" rows="15"
+					value="#{animalMB.animalLazyDataModel}" rowKey="#{ani.id}"
+					paginator="true" lazy="true"
+					filteredValue="#{animalMB.animaisFiltered}"
+					emptyMessage="Nenhum registro encontrado">
+
+					<f:facet name="header">
+						<h:outputText value="Animais Cadastrados" />
+					</f:facet>
+
+					<p:column headerText="Nome" filterBy="#{ani.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{ani.nome}" />
+					</p:column>
+
+					<p:column headerText="Tipo" filterBy="#{ani.raca.tipoAnimal.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{ani.raca.tipoAnimal.nome}" />
+					</p:column>
+
+					<p:column headerText="Raça" filterBy="#{ani.raca.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{ani.raca}" />
+					</p:column>
+
+					<p:column headerText="Dono">
+						<p:commandLink value="#{ani.dono.nome}">
+						</p:commandLink>
+					</p:column>
+
+					<p:column headerText="Ações">
+						<p:panelGrid columns="2">
+							<p:commandButton id="editarAni" value="Editar" icon="editar16"
+								update=":animal_form" oncomplete="PF('aniDialog').show()">
+								<f:setPropertyActionListener value="#{ani}"
+									target="#{animalMB.animal}" />
+							</p:commandButton>
+
+							<p:commandButton id="removerAni" value="Remover" icon="remover16"
+								update=":confirm" oncomplete="PF('aniConfirmDialog').show()">
+								<f:setPropertyActionListener value="#{ani}"
+									target="#{animalMB.animal}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+
+
+		<p:dialog id="aniDlg" widgetVar="aniDialog" header="Dados do animal"
+			height="40%" modal="true" resizable="false" draggable="false">
+
+			<ui:include src="animalCRUDForm.xhtml" />
+
+		</p:dialog>
+
+		<p:confirmDialog id="confirm" widgetVar="aniConfirmDialog"
+			global="true" header="Confirma exclusão de animal?" showEffect="fade"
+			message="Deseja realmente excluir o
+				animal: #{animalMB.animal.nome}"
+			hideEffect="explode">
+			<h:form>
+				<p:commandButton value="Sim" actionListener="#{animalMB.remover}"
+					oncomplete="PF('aniConfirmDialog').hide()" update=":tableForm"
+					icon="ok16" />
+				<p:commandButton value="Não" actionListener="#{animalMB.cancelar}"
+					oncomplete="PF('aniConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

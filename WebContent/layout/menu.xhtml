@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<div
+		style="background-image: url('http://localhost:8080/splettpet/resources/img/menu_background/slide2.jpg'); height: 180px; background-color: #6DB6D5; padding: 20px; border-style: solid; border-width: 1px; border-color: aqua; border-radius: 10px;">
+		<div align="left">
+
+			<h:graphicImage
+				value="http://localhost:8080/splettpet/imgs/#{perfilMB.usuarioVisualizado.fotoNome}"
+				styleClass="fotoPerfil" rendered="#{perfilMB.hasProfilePic()}" />
+			<h:graphicImage library="img" name="user168.png"
+				styleClass="fotoPerfil" rendered="#{!perfilMB.hasProfilePic()}" />
+			<p:outputLabel value="#{perfilMB.usuarioVisualizado.nome}"
+				styleClass="nomeLb" />
+		</div>
+
+		<p:commandButton id="caixaDeEntradaBt" value="Caixa de entrada"
+			icon="caixaDeEntrada" styleClass="notification"
+			rendered="#{perfilMB.isManagementAllowed()}" action="mensagens" />
+		<p:commandButton id="enviarMensagemBt" style="margin-top:-10%"
+			value="Enviar Mensagem" icon="enviarMensagem"
+			styleClass="notification"
+			rendered="#{perfilMB.isManagementAllowed()}"
+			onclick="PF('enviarMsgDialog').show()"
+			actionListener="#{mensagemMB.criar}" update=":mensagem_form" />
+	</div>
+
+	<h:form id="menu_form">
+		<p:menubar>
+			<p:menuitem styleClass="menuBarItem" id="InicioMn" value="Perfil"
+				action="perfil" />
+
+			<p:menuitem styleClass="menuBarItem" id="postagensMn"
+				value="Postagens" action="postagens" />
+
+			<p:menuitem styleClass="menuBarItem" id="fotosMn" value="Fotos"
+				action="fotos" />
+
+			<p:menuitem styleClass="menuBarItem" id="videosMn" value="Videos"
+				action="videos" />
+
+			<p:menuitem styleClass="menuBarItem" id="animaisMn" value="Animais"
+				action="animais" />
+
+			<p:menuitem styleClass="menuBarItem" id="amigosMn" value="Amigos"
+				action="amigos" />
+
+			<p:menuitem styleClass="menuBarItem" id="avaliacoesMn"
+				value="Avaliações" action="avaliacoes" />
+
+			<p:submenu label="Configurações" styleClass="menuBarItem"
+				rendered="#{perfilMB.isManagementAllowed()}">
+				<p:menuitem value="Editar Perfil"
+					onclick="PF('editarPerfilDialog').show()"
+					actionListener="#{configuracoesMB.criar}" />
+				<p:menuitem value="Privacidade"
+					onclick="PF('privacidadeDialog').show()"
+					actionListener="#{configuracoesMB.criar}" />
+				<p:menuitem value="Preferencia"
+					onclick="PF('preferenciaDialog').show()"
+					actionListener="#{configuracoesMB.criar}" />
+			</p:submenu>
+
+			<f:facet name="options">
+				<p:commandButton id="addFriendButton" icon="plus16"
+					value="Adicionar amigo" actionListener="#{amizadeMB.addFriend()}"
+					rendered="#{perfilMB.isFriendshipRequestAllowed()}"
+					update=":menu_form" />
+
+				<p:commandButton id="RequestSentButton" icon="user"
+					value="Solicitação enviada"
+					rendered="#{perfilMB.isFriendshipRequestSent()}" disabled="true" />
+
+				<p:commandButton id="FriendButton" icon="ok16" value="Amigos"
+					rendered="#{perfilMB.isFriend()}" disabled="true" />
+
+				<p:commandButton id="RequestReceivedButton" icon="user"
+					value="Solicitação recebida"
+					rendered="#{perfilMB.isFriendshipRequestReceived()}"
+					disabled="true" />
+			</f:facet>
+
+		</p:menubar>
+
+	</h:form>
+
+	<ui:include src="/user/privacidade/privacidade.xhtml" />
+	<ui:include src="/user/editarperfil/editarperfil.xhtml" />
+	<ui:include src="/user/preferencia/preferencia.xhtml" />
+	<ui:include src="/user/mensagem/enviarmensagem.xhtml" />
+</ui:composition>

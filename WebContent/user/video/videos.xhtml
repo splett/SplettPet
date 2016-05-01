@@ -1,0 +1,114 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<p:growl id="msg" showDetail="true"></p:growl>
+
+		<p:commandButton id="addVideo" value="Adicionar Video"
+			actionListener="#{videoMB.criar}"
+			oncomplete="PF('videoDialog').show()" update=":videoDlg"
+			rendered="#{perfilMB.isManagementAllowed()}" />
+		<br />
+
+		<h:form id="tableForm">
+			<p:dataTable id="videosTable" var="video" rows="10"
+				value="#{videoMB.videoLazyDataModel}" rowKey="#{video.id}"
+				paginator="true" lazy="true"
+				emptyMessage="Nenhum registro encontrado">
+
+				<f:facet name="header">
+					<h:outputText value="Videos" />
+				</f:facet>
+
+				<p:column>
+					<div align="right">
+
+						<p:commandButton id="editarVideo" value="Editar" icon="editar16"
+							oncomplete="PF('videoDialog').show()" update=":videos_form"
+							rendered="#{perfilMB.isManagementAllowed()}">
+							<f:setPropertyActionListener value="#{video}"
+								target="#{videoMB.video}" />
+						</p:commandButton>
+
+						<p:commandButton id="removerVideo" value="Remover"
+							icon="remover16" update=":confirm"
+							oncomplete="PF('videoConfirmDialog').show()"
+							rendered="#{perfilMB.isManagementAllowed()}">
+							<f:setPropertyActionListener value="#{video}"
+								target="#{videoMB.video}" />
+						</p:commandButton>
+
+					</div>
+					
+					<h:outputLabel id="mensagemLb"
+						value="#{perfilMB.usuarioVisualizado.nome}" styleClass="label"
+						style="color: #6DB6D5;" />
+						<br/>
+					<h:outputText value="#{video.descricao}" />
+
+					<br />
+					<iframe width="420" height="315" src="#{video.caminho}">
+</iframe>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog id="videoDlg" widgetVar="videoDialog"
+			header="Adicionar Video" height="40%" modal="true" resizable="false"
+			draggable="false">
+			<h:form id="videos_form">
+				<h:outputLabel id="descricaoLb" value="Descrição: " for="descricao"
+					style="float:left; margin-right:2px;" />
+				<p:inputTextarea id="descricao" autoResize="false" rows="5"
+					cols="50" counter="display" maxlength="300"
+					counterTemplate="{0} caracteres restantes"
+					value="#{videoMB.video.descricao}" />
+				<br />
+				<h:outputText id="display" />
+				<br />
+				<h:panelGrid columns="3" styleClass="CRUDform">
+
+					<h:outputLabel id="linkLb" value="URL:" for="link" />
+					<p:inputText id="link" value="#{videoMB.video.caminho}"
+						required="true" requiredMessage="Link é obrigatório" />
+					<p:message for="link" />
+
+
+				</h:panelGrid>
+
+				<h:outputText id="publicoLb" value="Publico: " for="publico" />
+				<p:selectBooleanCheckbox id="publico"
+					value="#{videoMB.video.publico}" />
+				<br />
+
+				<p:commandButton id="salvarBT" value="Salvar" icon="salvar16"
+					update=":tableForm:videosTable :videos_form :msg"
+					actionListener="#{videoMB.salvar}"
+					oncomplete="if(!args.validationFailed) PF('videoDialog').hide()" />
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('videoDialog').hide()" immediate="true"
+					update=":msg" actionListener="#{videoMB.cancelar}" />
+
+
+			</h:form>
+		</p:dialog>
+
+		<p:confirmDialog id="confirm" widgetVar="videoConfirmDialog"
+			global="true" header="Confirma exclusão do video?"
+			message="Deseja realmente excluir o vídeo?">
+			<h:form>
+				<p:commandButton value="Sim" actionListener="#{videoMB.remover}"
+					oncomplete="PF('videoConfirmDialog').hide()" icon="ok16"
+					update=":tableForm:videosTable" />
+				<p:commandButton value="Não"
+					oncomplete="PF('videoConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+
+	</ui:define>
+
+</ui:composition>

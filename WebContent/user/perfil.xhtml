@@ -1,0 +1,282 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+	
+	<script>
+	var disabledDays = #{disponibilidadeMB.datasDesabilitar};
+	function disableAllTheseDays(date) {
+	    var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+	    for (i = 0; i &lt; disabledDays.length; i++) {
+	        if($.inArray((m+1) + '-' + d + '-' + y,disabledDays) != -1) {
+	            return [false];
+	        }
+	    }
+	    return [true];
+	}
+	function disableAllDays(date) {
+	    var m = date.getMonth(), d = date.getDate(), y = date.getFullYear();
+	    for (i = 0; i &lt; disabledDays.length; i++) {
+	        if($.inArray((m+1) + '-' + d + '-' + y,disabledDays) != -1) {
+	            return [true];
+	        }
+	    }
+	    return [false];
+	}
+	</script>
+
+		<div>
+			<div
+				style="width: 40%; height: 100%; float: left; margin-left: 10px;">
+
+				<p:panel styleClass="painelDados">
+					<f:facet name="header">
+						<h:outputText value="Dados Pessoais" />
+					</f:facet>
+					<p:panelGrid id="dadosPessoais" columns="2" layout="tabular">
+						<h:outputLabel styleClass="coisa" value="Data de Nascimento:" />
+						<h:outputText
+							value="#{perfilMB.usuarioVisualizado.dataNascimento}"
+							rendered="#{perfilMB.mostrarDataNascimento()}">
+							<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
+						</h:outputText>
+						<h:outputText value="Essa informação é privada"
+							rendered="#{!perfilMB.mostrarDataNascimento()}" />
+
+						<h:outputLabel styleClass="coisa" value="E-mail:" />
+						<h:outputText value="#{perfilMB.usuarioVisualizado.email}"
+							rendered="#{perfilMB.mostrarEmail()}" />
+						<h:outputText value="Essa informação é privada"
+							rendered="#{!perfilMB.mostrarEmail()}" />
+
+						<h:outputLabel styleClass="coisa" value="Gênero:" />
+						<h:outputText
+							value="#{perfilMB.usuarioVisualizado.genero.toString()}"
+							rendered="#{perfilMB.mostrarGenero()}" />
+						<h:outputText value="Essa informação é privada"
+							rendered="#{!perfilMB.mostrarGenero()}" />
+
+						<h:outputLabel styleClass="coisa" value="Endereço:" />
+						<h:outputText value="#{perfilMB.usuarioVisualizado.endereco}"
+							rendered="#{perfilMB.mostrarEndereco()}" />
+						<h:outputText value="Essa informação é privada"
+							rendered="#{!perfilMB.mostrarEndereco()}" />
+
+						<h:outputLabel styleClass="coisa" value="Telefone celular:" />
+						<h:outputText
+							value="#{perfilMB.usuarioVisualizado.telefoneCelular}"
+							rendered="#{perfilMB.mostrarTelefoneCelular()}" />
+						<h:outputText value="Essa informação é privada"
+							rendered="#{!perfilMB.mostrarTelefoneCelular()}" />
+
+						<h:outputLabel styleClass="coisa" value="Telefone Fixo:" />
+						<h:outputText value="#{perfilMB.usuarioVisualizado.telefoneFixo}"
+							rendered="#{perfilMB.mostrarTelefoneFixo()}" />
+						<h:outputText value="Essa informação é privada"
+							rendered="#{!perfilMB.mostrarTelefoneFixo()}" />
+
+
+						<br />
+						<p:spacer height="0" />
+
+						<h:outputLabel styleClass="coisa" value="Preferência:" />
+						<h:outputText
+							value="#{perfilMB.usuarioVisualizado.preferencia.toString()}" />
+					</p:panelGrid>
+				</p:panel>
+
+				<h:form id="disponibilidade_form">
+
+					<p:commandButton id="novaDisponibilidade"
+						value="Adicionar disponibilidade"
+						actionListener="#{disponibilidadeMB.criarPeriodoDisponivel}"
+						oncomplete="PF('disponibilidadeDialog').show()"
+						update=":disponibilidadeDlg"
+						rendered="#{perfilMB.isManagementAllowed()}"/>
+
+					<p:commandButton id="removeDisponibilidade"
+						value="Remover disponibilidade"
+						actionListener="#{disponibilidadeMB.criarPeriodoDisponivel}"
+						oncomplete="PF('removedisponibilidadeDialog').show()"
+						update=":removedisponibilidadeDlg"
+						rendered="#{perfilMB.isManagementAllowed()}"/>
+
+					<p:dataScroller value="#{disponibilidadeMB.disponibilidadesUsuarioVisualizado}" var="dispo"
+						chunkSize="3" id="disponibilidadeDs" emptyMessage="Nenhuma data disponível" styleClass="painelDados">
+	
+										
+						<f:facet name="header">
+								<h:outputText value="Próximas datas disponíveis" />
+						</f:facet>
+						<p:panelGrid columns="2">
+						<h:outputText value="#{dispo.data}" style="margin-left: -10px;">
+							<f:convertDateTime dateStyle="full" type="date" locale="pt" />
+						</h:outputText>		
+						</p:panelGrid>			
+					</p:dataScroller>
+						
+						
+
+
+
+				</h:form>
+			</div>
+
+			<div
+				style="margin-right: 10px; float: right; width: 55%; margin-bottom: 10px;">
+				<h:form id="tableForm">
+					<p:dataScroller value="#{postagemMB.postagens}" var="postagem"
+						chunkSize="3" id="postagensDs">
+						<f:facet name="header">
+							<h:outputText value="Últimas Postagens" />
+							<p:commandButton value="Ver mais" action="postagens"
+								style="position:absolute; margin-left: 150px; margin-top: 25px; margin-bottom: 20px;" />
+						</f:facet>
+						<f:facet name="loader">
+							<p:commandButton type="button" value="Mostrar mais postagens"
+								icon="ui-icon-circle-triangle-s" />
+						</f:facet>
+						<p:panel style="width: 96%;" styleClass="post">
+							<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+								style="width:100%;">
+								<h:graphicImage
+									value="http://localhost:8080/splettpet/imgs/#{perfilMB.usuarioVisualizado.fotoNome}"
+									styleClass="fotoPostagem" />
+								<p:panelGrid columns="1" style="margin-left: 5px;">
+									<p:outputLabel value="#{postagem.usuario.nome}"
+										styleClass="label" style="color: #6DB6D5;" />
+									<h:outputText value="#{postagem.dataPostagem}"
+										style="font-size: 0.8em; color:gray">
+										<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
+									</h:outputText>
+								</p:panelGrid>
+							</p:panelGrid>
+
+							<div style="margin-top: 5px; margin-bottom: 2px;">
+								<h:outputText styleClass="postText" value="#{postagem.texto}" />
+							</div>
+							<p:commandButton value="Ver Mais"
+								oncomplete="PF('postagemDialog').show()" update=":postagemDlg">
+								<f:setPropertyActionListener value="#{postagem}"
+									target="#{postagemMB.postagemVisualizar}" />
+							</p:commandButton>
+						</p:panel>
+					</p:dataScroller>
+				</h:form>
+			</div>
+		</div>
+		
+		<p:dialog id="removedisponibilidadeDlg" widgetVar="removedisponibilidadeDialog"
+			header="Período disponível a ser deletado" width="40%" height="40%" modal="true"
+			resizable="false" closable="false" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="removerDisponibilidade_form">
+
+				<h:panelGrid columns="2">
+					<p:outputLabel for="inicio" value="Início do período" />
+					<p:outputLabel for="fim" value="Fim do período" />
+
+					<p:calendar id="inicio" mode="inline"
+						value="#{disponibilidadeMB.dataInicio}"
+						mindate="#{disponibilidadeMB.dataHoje}" 
+						beforeShowDay="disableAllDays"/>
+					<p:calendar id="fim" mode="inline"
+						value="#{disponibilidadeMB.dataFinal}"
+						mindate="#{disponibilidadeMB.dataHoje}" 
+						 beforeShowDay="disableAllDays"/>
+				</h:panelGrid>
+
+				<p:commandButton id="deletarBt" value="Deletar" icon="salvar16"
+					update=":disponibilidade_form"
+					action="#{disponibilidadeMB.deletarPeriodo}"
+					oncomplete="PF('removedisponibilidadeDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('removedisponibilidadeDialog').hide()" immediate="true"
+					actionListener="#{postagemMB.cancelar}" />
+
+			</h:form>
+		</p:dialog>
+		
+
+		<p:dialog id="disponibilidadeDlg" widgetVar="disponibilidadeDialog"
+			header="Período disponível" width="40%" height="40%" modal="true"
+			resizable="false" closable="false" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="novaDisponibilidade_form">
+
+				<h:panelGrid columns="2">
+					<p:outputLabel for="inicio" value="Início do período" />
+					<p:outputLabel for="fim" value="Fim do período" />
+
+					<p:calendar id="inicio" mode="inline"
+						value="#{disponibilidadeMB.dataInicio}"
+						mindate="#{disponibilidadeMB.dataHoje}" 
+						beforeShowDay="disableAllTheseDays"/>
+					<p:calendar id="fim" mode="inline"
+						value="#{disponibilidadeMB.dataFinal}"
+						mindate="#{disponibilidadeMB.dataHoje}" 
+						 beforeShowDay="disableAllTheseDays"/>
+				</h:panelGrid>
+
+				<p:commandButton id="salvarBt" value="Salvar" icon="salvar16"
+					update=":disponibilidade_form"
+					action="#{disponibilidadeMB.salvarPeriodo}"
+					oncomplete="PF('disponibilidadeDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('disponibilidadeDialog').hide()" immediate="true"
+					actionListener="#{postagemMB.cancelar}" />
+
+			</h:form>
+		</p:dialog>
+
+		<p:dialog id="postagemDlg" widgetVar="postagemDialog"
+			header="Postagem" width="40%" modal="true" resizable="false"
+			showEffect="clip" hideEffect="clip">
+
+			<ui:include src="postagem/postagem.xhtml"></ui:include>
+
+		</p:dialog>
+		
+				<p:dialog id="editarPostagemDlg" widgetVar="editarPostagemDialog"
+			header="Editar Postagem" width="40%" modal="true" resizable="false" draggable="false">
+			<h:form id="editarPostagem_form">
+
+				<h:panelGrid columns="1">
+					<p:inputTextarea rows="5" cols="60" counter="display"
+						maxlength="255" counterTemplate="{0} caracteres restantes."
+						autoResize="false" value="#{postagemMB.postagemVisualizar.texto}" />
+					<h:outputText id="display" />
+				</h:panelGrid>
+
+				<p:commandButton id="enviarBt" value="Salvar" icon="salvar16"
+					update=":tableForm" action="#{postagemMB.editarPostagem}"
+					oncomplete="if(!args.validationFailed) PF('editarPostagemDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('editarPostagemDialog').hide()"
+					update=":editarPostagem_form" immediate="true"
+					actionListener="#{postagemMB.cancelar}" />
+			</h:form>
+		</p:dialog>
+		
+		<p:confirmDialog id="confirmDispo" widgetVar="dispoConfirmDialog"
+			global="true" header="Confirma exclusão da disponibilidade?"
+			showEffect="fade"
+			message="Deseja realmente excluir a disponibilidade?"
+			hideEffect="explode">
+			<h:form>
+				<p:commandButton value="Sim" action="#{disponibilidadeMB.remover}"
+					oncomplete="PF('dispoConfirmDialog').hide()" 
+					icon="ok16" />
+				<p:commandButton value="Não" actionListener="#{disponibilidadeMB.cancelar}"
+					oncomplete="PF('postConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

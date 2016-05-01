@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="enviarMsgDlg" widgetVar="enviarMsgDialog"
+		header="Enviar Mensagem" modal="true" resizable="false"
+		closable="false" draggable="false" showEffect="clip" hideEffect="clip"
+		height="40%">
+		<h:form id="mensagem_form">
+
+			<h:outputLabel id="mensagemLb" value="Texto:"
+				for="mensagem" style="float:left; margin-right:2px;" />
+			<br />
+			<p:inputTextarea id="mensagem" autoResize="false" rows="5"
+				cols="58" counter="display" maxlength="300"
+				counterTemplate="{0} caracteres restantes"
+				value="#{mensagemMB.mensagem.texto}" />
+			<br />
+			<h:outputText id="display" />
+			<br />
+
+			<p:commandButton id="enviarBt" value="enviar"
+				actionListener="#{mensagemMB.salvar}"
+				oncomplete="PF('enviarMsgDialog').hide()" />
+
+			<p:commandButton id="cancelarBt" value="cancelar" icon="cancelar16"
+				oncomplete="PF('enviarMsgDialog').hide()" immediate="true"
+				actionListener="#{mensagemMB.cancelar}" />
+		</h:form>
+	</p:dialog>
+</ui:composition>

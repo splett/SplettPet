@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form id="tableForm">
+			<p:dataTable id="mensagensTable" var="mensagem" rows="10"
+				value="#{mensagemMB.mensagemLazyDataModel}" rowKey="#{mensagem.id}"
+				paginator="true" lazy="true"
+				emptyMessage="Nenhum registro encontrado">
+
+				<f:facet name="header">
+					<h:outputText value="Caixa de entrada" />
+				</f:facet>
+
+				<p:column>
+					<div align="right">
+						<h:outputLabel id="mensagemLb" value="#{mensagem.emissor.nome}  -  "  styleClass="label"
+									style="color: #6DB6D5; text-decoration: none; float: left;"/>
+
+						<h:outputText value="#{mensagem.data} - "
+									style=" float: left;">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+
+
+
+						<h:outputText value="#{mensagem.data}" style=" float: left;">
+							<f:convertDateTime pattern="HH:mm" />
+						</h:outputText>
+
+						<p:commandButton id="verMais" value="Ler mensagem"
+							oncomplete="PF('verMaisDialog').show()" update=":msg_form">
+							<f:setPropertyActionListener value="#{mensagem}"
+								target="#{mensagemMB.mensagem}" />
+						</p:commandButton>
+
+						<p:commandButton id="responderMensagem" value="Responder"
+							oncomplete="PF('enviarMsgDialog').show()"
+							actionListener="#{mensagemMB.criarResposta}">
+							<f:setPropertyActionListener value="#{mensagem}"
+								target="#{mensagemMB.mensagem}" />
+						</p:commandButton>
+
+						<p:commandButton id="removerMensagem" value="Excluir"
+							icon="remover16" update=":confirm"
+							oncomplete="PF('mensagemConfirmDialog').show()">
+							<f:setPropertyActionListener value="#{mensagem}"
+								target="#{mensagemMB.mensagem}" />
+						</p:commandButton>
+
+					</div>
+
+				</p:column>
+			</p:dataTable>
+		</h:form>
+
+		<p:dialog id="verMaisDlg" widgetVar="verMaisDialog" header="Mensagem"
+			height="40%" modal="true" resizable="false" draggable="false">
+			<h:form id="msg_form">
+
+				<h:outputLabel id="mensagemLb"
+					value="#{mensagemMB.mensagem.emissor.nome} diz:"
+					style="float:left; margin-right:2px;" />
+				<br />
+				<p:inputTextarea id="mensagem" autoResize="false" rows="5" cols="58"
+					counter="display" maxlength="300"
+					counterTemplate="{0} caracteres restantes"
+					value="#{mensagemMB.mensagem.texto}" readonly="true" />
+				<br />
+				<h:outputText id="display" />
+				<br />
+
+
+			</h:form>
+		</p:dialog>
+
+		<p:confirmDialog id="confirm" widgetVar="mensagemConfirmDialog"
+			global="true" header="Confirma exclusão da mensagem?"
+			message="Deseja realmente excluir a mensagem de #{mensagemMB.mensagem.emissor.nome} ">
+			<h:form>
+				<p:commandButton value="Sim" actionListener="#{mensagemMB.remover}"
+					oncomplete="PF('mensagemConfirmDialog').hide()" icon="ok16"
+					update=":tableForm:mensagensTable" />
+				<p:commandButton value="Não"
+					oncomplete="PF('mensagemConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+
+
+		<p:dialog id="enviarMsg" widgetVar="enviarMsgDialog"
+			header="Enviar Mensagem" modal="true" resizable="false"
+			closable="false" draggable="false" showEffect="clip"
+			hideEffect="clip" height="40%">
+			<h:form id="enviar_form">
+
+				<h:outputLabel id="mensagemLb" value="Texto:" for="mensagem"
+					style="float:left; margin-right:2px;" />
+				<br />
+				<p:inputTextarea id="mensagem" autoResize="false" rows="5" cols="58"
+					counter="display" maxlength="300"
+					counterTemplate="{0} caracteres restantes"
+					value="#{mensagemMB.resposta.texto}" />
+				<br />
+				<h:outputText id="display" />
+				<br />
+
+				<p:commandButton id="enviarBt" value="enviar"
+					actionListener="#{mensagemMB.responder}"
+					oncomplete="PF('enviarMsgDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="cancelar" icon="cancelar16"
+					oncomplete="PF('enviarMsgDialog').hide()" immediate="true"
+					actionListener="#{mensagemMB.cancelar}" />
+			</h:form>
+
+		</p:dialog>
+
+	</ui:define>
+
+</ui:composition>

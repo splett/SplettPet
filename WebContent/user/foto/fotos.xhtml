@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<p:commandButton id="addFoto" value="Adicionar Foto"
+			actionListener="#{fotoMB.criar}" oncomplete="PF('fotoDialog').show()"
+			update=":fotoDlg" rendered="#{perfilMB.isManagementAllowed()}" />
+
+
+		<h:form id="tableForm">
+			<p:dataTable id="fotosTable" var="foto" rows="10"
+				value="#{fotoMB.fotoLazyDataModel}" rowKey="#{foto.id}"
+				paginator="true" lazy="true"
+				emptyMessage="Nenhum registro encontrado">
+
+				<f:facet name="header">
+					<h:outputText value="Fotos" />
+				</f:facet>
+
+				<p:column>
+
+
+					<h:outputText value="#{foto.descricao}" />
+					<br />
+					<div style="float: right;">
+
+						<p:commandButton id="editarFoto" value="Editar" icon="editar16"
+							oncomplete="PF('editarFotoDialog').show()"
+							rendered="#{perfilMB.isManagementAllowed()}">
+							<f:setPropertyActionListener value="#{foto}"
+								target="#{fotoMB.foto}" />
+						</p:commandButton>
+
+						<p:commandButton id="removerFoto" value="Remover" icon="remover16"
+							update=":confirm" oncomplete="PF('fotoConfirmDialog').show()"
+							rendered="#{perfilMB.isManagementAllowed()}">
+							<f:setPropertyActionListener value="#{foto}"
+								target="#{fotoMB.foto}" />
+						</p:commandButton>
+
+					</div>
+					
+					<h:graphicImage value="http://localhost:8080/splettpet/imgs/#{foto.nome}" width="420" height="315" />
+				</p:column>
+			</p:dataTable>
+
+		</h:form>
+
+		<p:dialog id="fotoDlg" widgetVar="fotoDialog" header="Adicionar Foto"
+			height="40%" modal="true" resizable="false" draggable="false">
+
+
+			<h:form enctype="multipart/form-data">
+				<p:growl id="messages" showDetail="true" />
+				<h:outputLabel id="descricaoLb" value="Descrição: " for="descricao"
+					style="float:left; margin-right:2px;" />
+				<p:inputTextarea id="descricao" autoResize="false" rows="5"
+					cols="50" counter="display" maxlength="300"
+					counterTemplate="{0} caracteres restantes"
+					value="#{fotoMB.foto.descricao}" />
+				<br />
+				<h:outputText id="display" />
+				<br />
+
+				<p:fileUpload value="#{fotoMB.fileUp}" mode="simple"
+					skinSimple="true" />
+				<br />
+				<h:outputText id="publicoLb" value="Publico: " for="publico" />
+				<p:selectBooleanCheckbox id="publico" value="#{fotoMB.foto.publico}" />
+				<br />
+				<p:commandButton value="Salvar" ajax="false"
+					actionListener="#{fotoMB.doUpload}"
+					oncomplete="if(!args.validationFailed) PF('fotoDialog').hide()"
+					icon="ok16" />
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('fotoDialog').hide()" immediate="true"
+					actionListener="#{fotoMB.cancelar}" />
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:dialog id="editarFotoDlg" widgetVar="editarFotoDialog"
+			header="Adicionar Foto" height="40%" modal="true" resizable="false"
+			draggable="false">
+
+
+			<h:form enctype="multipart/form-data">
+				<p:growl id="messages" showDetail="true" />
+				<h:outputLabel id="descricaoLb" value="Descrição: " for="descricao"
+					style="float:left; margin-right:2px;" />
+				<p:inputTextarea id="descricao" autoResize="false" rows="5"
+					cols="50" counter="display" maxlength="300"
+					counterTemplate="{0} caracteres restantes"
+					value="#{fotoMB.foto.descricao}" />
+				<br />
+				<h:outputText id="display" />
+				<br />
+
+				<h:outputText id="publicoLb" value="Publico: " for="publico" />
+				<p:selectBooleanCheckbox id="publico" value="#{fotoMB.foto.publico}" />
+				<br />
+				<p:commandButton value="Salvar" ajax="false"
+					oncomplete="if(!args.validationFailed) PF('editarFotoDialog').hide()"
+					icon="ok16" actionListener="#{fotoMB.salvar}" />
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('edotfotoDialog').hide()" immediate="true"
+					actionListener="#{fotoMB.cancelar}" />
+
+			</h:form>
+
+		</p:dialog>
+
+		<p:confirmDialog id="confirm" widgetVar="fotoConfirmDialog"
+			global="true" header="Confirma exclusão do arquivo?"
+			message="Deseja realmente excluir a foto?">
+			<h:form>
+				<p:commandButton value="Sim" actionListener="#{fotoMB.remover}"
+					oncomplete="PF('fotoConfirmDialog').hide()" icon="ok16"
+					update=":tableForm:fotosTable" />
+				<p:commandButton value="Não"
+					oncomplete="PF('fotoConfirmDialog').hide()" icon="cancelar16"
+					update=":tableForm:fotosTable" />
+			</h:form>
+		</p:confirmDialog>
+
+	</ui:define>
+
+</ui:composition>

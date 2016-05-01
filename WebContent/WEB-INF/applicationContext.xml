@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd 
+	http://www.springframework.org/schema/aop
+	http://www.springframework.org/schema/tx
+	http://www.springframework.org/schema/aop/spring-aop-3.1.xsd
+	http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<!-- data source -->
+	<bean id="dataSource"
+		class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://localhost:3306/db_splett" />
+		<property name="username" value="root" />
+		<property name="password" value="" />
+	</bean>
+
+	<sec:http auto-config="false" create-session="ifRequired" access-denied-page="/negado.splett">
+		<sec:logout logout-success-url="/index.splett" />
+		<sec:form-login login-page="/index.html"
+			authentication-failure-url="/erroLogin.splett" default-target-url="/user/perfil.splett"/>
+		<sec:intercept-url pattern="/user/perfil.splett" access="ROLE_USER, ROLE_ADMIN" />
+		<sec:intercept-url pattern="/user/**" access="ROLE_USER, ROLE_ADMIN" />
+		<sec:intercept-url pattern="/adm/**" access="ROLE_ADMIN" />
+ 		<sec:intercept-url pattern="/**"
+			access="IS_AUTHENTICATED_ANONYMOUSLY" />
+	</sec:http>
+	
+	<sec:authentication-manager>
+			<sec:authentication-provider>
+				<sec:password-encoder hash = "md5" />
+				<sec:jdbc-user-service data-source-ref = "dataSource" 
+				users-by-username-query = "SELECT username, password,'true' as enable FROM tbUsuario WHERE username=?"
+				authorities-by-username-query = "SELECT username, authority FROM tbUsuario WHERE username=?" />
+				</sec:authentication-provider>
+	</sec:authentication-manager>
+		
+
+</beans>

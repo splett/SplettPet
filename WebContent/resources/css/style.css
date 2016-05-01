@@ -1,0 +1,433 @@
+body {
+	margin: 0px 0;
+	text-align: justify;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	background-color: #E9EAED;
+}
+
+.main {
+	background: url('../../resources/img/login_background/slide1.jpg')
+		no-repeat center top fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+#loginPanel {
+	width: 350px;
+	height: 500px;
+	float: left;
+	margin-bottom: 0px;
+	margin-top: 8%;
+	float: left;
+}
+
+#loginHeaderText {
+	float: left;
+	font-size: 1.5em;
+	margin: 10px;
+	font-family: "Arial", Arial, sans-serif;
+}
+
+.loginButton {
+	position: relative;
+	width: 101%;
+	border: 1px solid #4297d7;
+	background-color: #2191c0;
+	background: url('../../resources/img/button_background.png') 50% 50%
+		repeat-x;
+	color: #eaf5f7;
+	font-weight: bold;
+	margin-top: 25px;
+	cursor: pointer;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
+	font-size: 1.5em !important;
+	padding: 7px;
+}
+
+.loginButton:active {
+	padding-top: 3.4%;
+	padding-bottom: 1.4%;
+	padding-left: 3.4%;
+}
+
+.notification {
+	background: white;
+	border-radius: 50%;
+	width: 35px;
+	height: 35px;
+	float: right;
+	margin-top: -17%;
+	transition: margin-right 0.5s, width 0.5s, border-radius 0.5s, color
+		0.5s ease-out 0.2s;
+	transform: scale(1.3);
+	font-size: 0.8em;
+	color: rgba(0, 0, 0, 0);
+}
+
+.notification:hover {
+	margin-right: 1%;
+	width: 100px;
+	border-radius: 5px;
+	color: rgba(0, 0, 0, 1);
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+.amigo, .animal {
+	border-bottom: 1px solid #4297d7;
+	padding: 10px;
+}
+
+.fixedTb {
+	width: 99%;
+	height: 30px;
+	margin: 1px;
+	border-style: none;
+	font-size: 2em;
+}
+
+.fixedTbLink {
+	padding-right: 20px;
+	margin-left: 40px;
+	margin-right: auto;
+	text-decoration: none;
+}
+
+#opcoesAdministrativasBt {
+	font-size: 0.1em !important;
+}
+
+.fotoPerfil {
+	height: 165px;
+	border-style: solid;
+	border-color: white;
+	background-color: white;
+	margin-left: 1%;
+	margin-top: 1%;
+	margin-right: 1%;
+	box-shadow: 2px 2px 8px black;
+	border-radius: 3px;
+}
+
+.fotoPerfilAnimal {
+	height: 125px;
+	border-style: solid;
+	border-color: white;
+	background-color: white;
+	margin-left: 1%;
+	margin-top: 1%;
+	margin-right: 5%;
+	box-shadow: 2px 2px 8px black;
+	border-radius: 3px;
+}
+
+.fotoPostagem {
+	width: 120%;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #6DB6D5;
+}
+
+.fotoAmigo {
+	height: 125px;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #6DB6D5;
+}
+
+.nomeLb {
+	font-size: 3em;
+	color: white;
+	text-shadow: 2px 2px 8px black;
+	font-weight: bold;
+}
+
+.animaisTable {
+	float: right;
+}
+
+.titulo1 {
+	font-size: 14px;
+	font-weight: bold;
+}
+
+.label {
+	font-size: 1.3em;
+	font-weight: bold;
+}
+
+.centro {
+	text-align: center;
+}
+
+.esquerda {
+	text-align: left;
+}
+
+.direita {
+	text-align: right;
+}
+
+.fonte {
+	font-size: 15px;
+}
+
+.painelDados {
+	margin-bottom: 10px;
+}
+
+.botaoCRUD {
+	margin: 0px;
+}
+
+.botaoSair {
+	padding-right: 50px;
+	font-size: 0.75em;
+}
+
+.CRUDform {
+	margin-bottom: 1%;
+}
+
+.filtroPesquisa {
+	margin-right: 15%;
+	margin-bottom: 10%;
+}
+
+.ui-layout-north {
+	z-index: 20 !important;
+	overflow: visible !important;
+}
+
+.ui-layout-north .ui-layout-unit-content {
+	overflow: visible !important;
+}
+
+a img {
+	border: none;
+	vertical-align: middle;
+}
+
+#footer {
+	clear: both;
+	width: 1000px;
+	margin: 0 auto;
+	position: relative;
+	bottom: 0;
+	background: url() repeat-x left top;
+	background: #86B5D9;
+}
+
+#footer p {
+	width: 100%;
+	margin: 0;
+	padding: 5px 2px;
+	font-size: 11px;
+	text-align: center;
+}
+
+#footer .legal {
+	float: left;
+	height: 12px;
+	font: 8pt Arial;
+	text-align: center;
+}
+
+.tamanhoCaixaOpcoes {
+	width: 200px;
+	height: 23px;
+}
+
+.metade {
+	width: 50%;
+}
+
+.umterco {
+	width: 33%;
+}
+
+.noventa {
+	width: 90%;
+}
+
+.noventaecinco {
+	width: 95%;
+}
+
+.cinco {
+	width: 5%;
+}
+
+.dez {
+	width: 10%;
+}
+
+.menuBarItem {
+	margin-left: 3px;
+}
+
+.ui-panelgrid td, .ui-panelgrid tr {
+	border-style: none !important
+}
+
+.planoEnsino16 {
+	background-image: url('../../resources/img/16/exam_16.png') !important
+}
+
+.planoTrabalho16 {
+	background-image: url('../../resources/img/16/teacher_write_16.png')
+		!important
+}
+
+.atendimento16 {
+	background-image:
+		url('../../resources/img/16/attendance_list_clock_16.png') !important
+}
+
+.attach16 {
+	background-image: url('../../resources/img/16/attach.png') !important
+}
+
+.ok16 {
+	background-image: url('../../resources/img/16/button_ok.png') !important
+}
+
+.salvar16 {
+	background-image: url('../../resources/img/16/button_ok.png') !important
+}
+
+.download16 {
+	background-image: url('../../resources/img/16/down_blue.png') !important
+}
+
+.cancel16 {
+	background-image: url('../../resources/img/16/cancel.png') !important
+}
+
+.cancelar16 {
+	background-image: url('../../resources/img/16/cancel.png') !important
+}
+
+.fechar16 {
+	background-image: url('../../resources/img/16/cancel.png') !important
+}
+
+.error16 {
+	background-image: url('../../resources/img/16/error.png') !important
+}
+
+.remover16 {
+	background-image: url('../../resources/img/16/remove.png') !important
+}
+
+.home16 {
+	background-image: url('../../resources/img/16/home_16.png') !important
+}
+
+.editar16 {
+	background-image: url('../../resources/img/16/editar-icone.png')
+		!important
+}
+
+.tools16 {
+	background-image: url('../../resources/img/16/ferramentas.png')
+		!important
+}
+
+.escola16 {
+	background-image: url('../../resources/img/16/bank_16_hot.png')
+		!important
+}
+
+.save16 {
+	background-image: url('../../resources/img/16/save.png') !important
+}
+
+.user16 {
+	background-image: url('../../resources/img/16/admin_16.png') !important
+}
+
+.user {
+	background-image: url('../../resources/img/user.png') !important
+}
+
+.teacher16 {
+	background-image: url('../../resources/img/16/teacher_clock_16.png')
+		!important
+}
+
+.report16 {
+	background-image: url('../../resources/img/16/report.png') !important;
+}
+
+.info16 {
+	background-image: url('../../resources/img/16/info.gif') !important
+}
+
+.pdf16 {
+	background-image: url('../../resources/img/16/pdf.png') !important
+}
+
+.android16 {
+	background-image: url('../../resources/img/16/android16.png') !important
+}
+
+.android216 {
+	background-image: url('../../resources/img/16/notification.png')
+		!important
+}
+
+.plus16 {
+	background-image: url('../../resources/img/16/plus.png') !important
+}
+
+.caixaDeEntrada {
+	background-image: url('../../resources/img/mensagem.png') !important;
+	margin-left: 10% !important;
+	top: 48% !important;
+	transform: scale(1.3);
+}
+
+.enviarMensagem {
+	background-image: url('../../resources/img/enviar_mensagem.png')
+		!important;
+	margin-left: 9% !important;
+	top: 48% !important;
+}
+
+.lupa {
+	background-image: url('../../resources/img/48/magnify.png') !important;
+	margin-left: 37% !important;
+	width: 100%;
+	height: 100%;
+	transform: scale(1.3);
+}
+
+.coisa {
+	margin-top: 100px;
+}
+
+.coluna1 {
+	width: 11%;
+	padding: 0 !important;
+}
+
+.coluna2 {
+	padding: 0 !important;
+}
+
+.postText {
+	font-size: 1.2em;
+}
+
+.post {
+	margin-bottom: 15px;
+	margin-top: 5px;
+}

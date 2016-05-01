@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:form id="user_form">
+		<h:panelGrid columns="3" styleClass="CRUDform">
+
+			<h:outputLabel id="tipoLb" value="Tipo: " for="tipo" />
+			<p:selectOneMenu id="tipo" value="#{usuarioMB.usuario.tipo}"
+				required="true" requiredMessage="Tipo é obrigatório">
+				<f:selectItem itemLabel="Selecione um" itemValue="" />
+				<f:selectItem itemLabel="Administrador" itemValue="ROLE_ADMIN" />
+				<f:selectItem itemLabel="Usuário" itemValue="ROLE_USER" />
+			</p:selectOneMenu>
+			<p:message for="tipo" />
+
+			<h:outputLabel id="nomeLb" value="Nome:" for="nome" />
+			<p:inputText id="nome" value="#{usuarioMB.usuario.nome}" size="50"
+				required="true" requiredMessage="Nome é obrigatório" />
+			<p:message for="nome" />
+
+			<h:outputLabel id="dtNascLb" value="Data Nascimento:" for="dtNasc" />
+			<p:calendar id="dtNasc" value="#{usuarioMB.usuario.dataNascimento}"
+				pattern="dd/MM/yyyy" navigator="true" yearRange="c-70:c+10"></p:calendar>
+			<p:message for="dtNasc" />
+
+			<h:outputLabel id="generoLb" value="Gênero:" for="genero" />
+			<p:selectOneMenu id="genero" value="#{usuarioMB.usuario.genero}"
+				required="true" requiredMessage="Gênero é obrigatório">
+				<f:selectItem itemLabel="Selecione um" itemValue="" />
+				<f:selectItem itemLabel="Masculino" itemValue="MASCULINO" />
+				<f:selectItem itemLabel="Feminino" itemValue="FEMININO" />
+				<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+			</p:selectOneMenu>
+			<p:message for="genero" />
+
+			<h:outputLabel id="EmailLb" value="E-mail:" for="email" />
+			<p:inputText id="email" value="#{usuarioMB.usuario.email}" size="50"
+				required="true" requiredMessage="Endereço de e-mail é obrigatório"
+				disabled="#{usuarioMB.usuario.id != null}"
+				validatorMessage="E-mail inválido">
+				<f:validateRegex
+					pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+				<p:ajax listener="#{usuarioMB.validarLogin}" update=":msg"
+					event="blur" />
+			</p:inputText>
+			<p:message id="emailMsg" for="email" />
+
+			<h:outputLabel id="senhaLb" value="Senha:" for="senha" />
+			<p:password id="senha" value="#{usuarioMB.usuario.senha}" size="50"
+				feedback="true" required="true"
+				requiredMessage="Senha é obrigatória" />
+			<p:message for="senha" />
+
+
+			<h:outputLabel id="cepLb" value="Cep:" for="cep" />
+			<p:inputText id="cep" value="#{usuarioMB.usuario.endereco.cep}"
+				size="50" required="true" requiredMessage="Cep é obrigatório">
+				<p:ajax listener="#{usuarioMB.procurarEndereco}"
+					update=":user_form:logradouro :user_form:bairro" event="blur" />
+			</p:inputText>
+			<p:message for="cep" />
+			
+			<h:outputLabel id="ufLb" value="Estado:" for="uf" />
+			<p:inputText id="uf" value="#{usuarioMB.usuario.endereco.uf}"
+				size="50" />
+			<p:message for="uf" />
+
+			<h:outputLabel id="cidadeLb" value="Cidade:" for="cidade" />
+			<p:inputText id="cidade" value="#{usuarioMB.usuario.endereco.cidade}"
+				size="50" />
+			<p:message for="cidade" />
+			
+			<h:outputLabel id="bairroLb" value="Bairro:" for="bairro" />
+			<p:inputText id="bairro" value="#{usuarioMB.usuario.endereco.bairro}"
+				size="50" />
+			<p:message for="bairro" />
+
+			<h:outputLabel id="logradouroLb" value="Logradouro:" for="logradouro" />
+			<p:inputText id="logradouro"
+				value="#{usuarioMB.usuario.endereco.logradouro}" size="50" />
+			<p:message for="logradouro" />
+
+			<h:outputLabel id="complementoLb" value="Complemento:"
+				for="complemento" />
+			<p:inputText id="complemento"
+				value="#{usuarioMB.usuario.endereco.complemento}" size="50" />
+			<p:message for="complemento" />
+
+			<h:outputLabel id="numeroLb" value="Número:" for="numero" />
+			<p:inputText id="numero" value="#{usuarioMB.usuario.endereco.numero}"
+				size="50" />
+			<p:message for="numero" />
+
+			<h:outputLabel id="telefone1Lb" value="Telefone 1:" for="telefone1" />
+			<p:inputMask id="telefone1" value="#{usuarioMB.usuario.telefoneFixo}"
+				size="50" required="true" requiredMessage="Telefone 1 é obrigatório"  mask="(99) 9999-9999?9" />
+			<p:message for="telefone1" />
+
+			<h:outputLabel id="telefone2Lb" value="Telefone 2:" for="telefone2" />
+			<p:inputMask id="telefone2"
+				value="#{usuarioMB.usuario.telefoneCelular}" size="50"  mask="(99) 9999-9999?9" />
+			<p:message for="telefone2" />
+
+
+		</h:panelGrid>
+
+		<p:commandButton id="salvarBt" value="salvar" icon="salvar16"
+			update=":tableForm:usuariosTable :user_form :msg"
+			actionListener="#{usuarioMB.salvar}"
+			oncomplete="if(!args.validationFailed) PF('usrDialog').hide()" />
+
+		<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+			oncomplete="PF('usrDialog').hide()" update=":msg" immediate="true"
+			actionListener="#{usuarioMB.cancelar}" />
+
+	</h:form>
+</ui:composition>

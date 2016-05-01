@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="editarPerfilDlg" widgetVar="editarPerfilDialog"
+		header="editarPerfil" modal="true" resizable="false" closable="false"
+		draggable="false" showEffect="clip" hideEffect="clip" height="40%">
+
+		<p:growl id="growl" showDetail="true"></p:growl>
+		<h:form id="editarPerfil_form" enctype="multipart/form-data">>
+			<h:panelGrid columns="3" styleClass="CRUDform">
+
+				<h:outputLabel id="nomeLb" value="Nome:" for="nome" />
+				<p:inputText id="nome" value="#{configuracoesMB.usuario.nome}"
+					size="50" required="true" requiredMessage="Nome é obrigatório" />
+				<p:message for="nome" />
+
+				<h:outputLabel id="dtNascLb" value="Data Nascimento:" for="dtNasc" />
+				<p:calendar id="dtNasc"
+					value="#{configuracoesMB.usuario.dataNascimento}"
+					pattern="dd/MM/yyyy" navigator="true" yearRange="c-70:c+10"></p:calendar>
+				<p:message for="dtNasc" />
+
+				<h:outputLabel id="generoLb" value="Gênero:" for="genero" />
+				<p:selectOneMenu id="genero"
+					value="#{configuracoesMB.usuario.genero}" required="true"
+					requiredMessage="Gênero é obrigatório">
+					<f:selectItem itemLabel="Selecione um" itemValue="" />
+					<f:selectItem itemLabel="Masculino" itemValue="MASCULINO" />
+					<f:selectItem itemLabel="Feminino" itemValue="FEMININO" />
+					<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+				</p:selectOneMenu>
+				<p:message for="genero" />
+
+				<h:outputLabel id="EmailLb" value="E-mail:" for="email" />
+				<p:inputText id="email" value="#{configuracoesMB.usuario.email}"
+					size="50" required="true"
+					requiredMessage="Endereço de e-mail é obrigatório"
+					disabled="#{configuracoesMB.usuario.id != null}"
+					validatorMessage="E-mail inválido">
+					<f:validateRegex
+						pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					<p:ajax listener="#{configuracoesMB.validarLogin}" update=":growl"
+						event="blur" />
+				</p:inputText>
+				<p:message id="emailMsg" for="email" />
+
+				<h:outputLabel id="cepLb" value="Cep:" for="cep" />
+				<p:inputText id="cep"
+					value="#{configuracoesMB.usuario.endereco.cep}" size="50"
+					required="true" requiredMessage="Cep é obrigatório">
+					<p:ajax listener="#{configuracoesMB.procurarEndereco}"
+						update=":editarPerfil_form:logradouro :editarPerfil_form:bairro :editarPerfil_form:uf :editarPerfil_form:cidade :editarPerfil_form:complemento"
+						event="blur" />
+				</p:inputText>
+				<p:message for="cep" />
+
+
+				<h:outputLabel id="logradouroLb" value="Logradouro:"
+					for="logradouro" />
+				<p:inputText id="logradouro"
+					value="#{configuracoesMB.usuario.endereco.logradouro}" size="50" />
+				<p:message for="logradouro" />
+
+				<h:outputLabel id="bairroLb" value="Bairro:" for="bairro" />
+				<p:inputText id="bairro"
+					value="#{configuracoesMB.usuario.endereco.bairro}" size="50" />
+				<p:message for="bairro" />
+
+				<h:outputLabel id="complementoLb" value="Complemento:"
+					for="complemento" />
+				<p:inputText id="complemento"
+					value="#{configuracoesMB.usuario.endereco.complemento}" size="50" />
+				<p:message for="complemento" />
+
+				<h:outputLabel id="ufLb" value="UF:" for="uf" />
+				<p:inputText id="uf" value="#{configuracoesMB.usuario.endereco.uf}"
+					size="50" />
+				<p:message for="uf" />
+
+				<h:outputLabel id="cidadeLb" value="Cidade:" for="cidade" />
+				<p:inputText id="cidade"
+					value="#{configuracoesMB.usuario.endereco.cidade}" size="50" />
+				<p:message for="cidade" />
+
+				<h:outputLabel id="numeroLb" value="Número:" for="numero" />
+				<p:inputText id="numero"
+					value="#{configuracoesMB.usuario.endereco.numero}" size="50" />
+				<p:message for="numero" />
+
+
+				<h:outputLabel id="telefone1Lb" value="Telefone 1:" for="telefone1" />
+				<p:inputMask id="telefone1"
+					value="#{configuracoesMB.usuario.telefoneFixo}" size="50"
+					required="true" requiredMessage="Telefone 1 é obrigatório"
+					mask="(99) 9999-9999?9" />
+				<p:message for="telefone1" />
+
+				<h:outputLabel id="telefone2Lb" value="Telefone 2:" for="telefone2" />
+				<p:inputMask id="telefone2"
+					value="#{configuracoesMB.usuario.telefoneCelular}" size="50"
+					mask="(99) 9999-9999?9" />
+				<p:message for="telefone2" />
+			</h:panelGrid>
+
+			<br />
+			<h:outputLabel value="Escolha uma foto para o seu perfil:" />
+			<br />
+			<p:fileUpload value="#{configuracoesMB.fileUp}" mode="simple"
+				skinSimple="true" />
+
+			<br />
+
+			<p:commandButton id="salvarBt" value="salvar" icon="salvar16"
+				actionListener="#{configuracoesMB.doUpload}"
+				oncomplete="if(!args.validationFailed) PF('editarPerfilDialog').hide()"
+				ajax="false" />
+
+			<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+				oncomplete="PF('editarPerfilDialog').hide()" update=":growl"
+				action="#{configuracoesMB.cancelar}" immediate="true" />
+
+
+
+		</h:form>
+
+
+	</p:dialog>
+</ui:composition>

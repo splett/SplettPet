@@ -1,0 +1,107 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core">
+
+	
+	<p:panel style="width: 96%;" styleClass="post">
+		<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+			style="width:100%;">
+			<h:graphicImage
+				value="http://localhost:8080/splettpet/imgs/#{perfilMB.usuarioVisualizado.fotoNome}"
+				styleClass="fotoPostagem" />
+			<p:panelGrid columns="1">
+				<p:outputLabel value="#{postagemMB.postagemVisualizar.usuario.nome}"
+					styleClass="label" style="color: #6DB6D5;" />
+				<h:outputText value="#{postagemMB.postagemVisualizar.dataPostagem}"
+					style="font-size: 0.8em; color:gray" />
+				<p:panelGrid columns="2">
+					<p:commandButton id="excluirPostagemBt" icon="remover16" update=":confirmPost" oncomplete="PF('postConfirmDialog').show()" style="align: right;"  rendered="#{perfilMB.managementAllowed}"/>
+					<p:commandButton id="editarPostagemBt" icon="editar16"
+						oncomplete="PF('editarPostagemDialog').show()"
+						update=":editarPostagemDlg :editarPostagem_form" rendered="#{perfilMB.isSelfProfile()}">
+
+					</p:commandButton>
+				</p:panelGrid>
+				
+			</p:panelGrid>
+		</p:panelGrid>
+
+		<div style="margin-top: 5px; margin-bottom: 2px;">
+			<h:outputText styleClass="postText"
+				value="#{postagemMB.postagemVisualizar.texto}" />
+		</div>
+		<h:form id="comentario_form">
+			<p:inputTextarea rows="1" cols="45"
+					autoResize="true" value="#{postagemMB.comentario.texto}" >
+					</p:inputTextarea>
+			<p:commandButton id="enviarBt" value="Comentar" action="#{postagemMB.salvarComentario()}" 
+					update=":ComentarioForm:comentariosDs :ComentarioForm :comentario_form" />
+					
+	</h:form>
+
+		<h:form id="ComentarioForm">
+			<f:facet name="header">
+         		Comentarios
+   			</f:facet>
+				<p:dataScroller value="#{postagemMB.comentarios}" var="comentario"
+				chunkSize="10" id="comentariosDs" scrollHeight="200" mode="inline">
+				<p:panel style="width: 96%;" styleClass="post">
+					<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+						style="width:100%;">
+						<h:graphicImage
+							value="http://localhost:8080/splettpet/imgs/#{perfilMB.usuarioVisualizado.fotoNome}"
+							styleClass="fotoPostagem" />
+						<p:panelGrid columns="1">
+							<p:outputLabel value="#{comentario.usuario.nome}"
+								styleClass="label" style="color: #6DB6D5;" />
+						<p:commandButton id="excluirPostagemBt" icon="remover16" update=":confirmComent" oncomplete="PF('comentConfirmDialog').show()" >
+						</p:commandButton>
+						</p:panelGrid>
+					</p:panelGrid>
+
+					<div style="margin-top: 5px; margin-bottom: 2px;">
+						<h:outputText styleClass="postText" value="#{comentario.texto}" />
+					</div>
+
+					
+				</p:panel>
+			</p:dataScroller>
+		</h:form>
+	</p:panel>
+	
+	<p:confirmDialog id="confirmComent" widgetVar="comentConfirmDialog"
+			global="true" header="Confirma exclusão do comentario?"
+			showEffect="fade"
+			message="Deseja realmente excluir o
+				comentario?"
+			hideEffect="explode">
+			<h:form>
+				<p:commandButton value="Sim" action="#{postagemMB.removerComentario}"
+					oncomplete="PF('comentConfirmDialog').hide()" update=":ComentarioForm:comentariosDs :ComentarioForm :comentario_form"
+					icon="ok16" />
+				<p:commandButton value="Não" actionListener="#{postagemMB.cancelarComentario}"
+					oncomplete="PF('comentConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+		
+			<p:confirmDialog id="confirmPost" widgetVar="postConfirmDialog"
+			global="true" header="Confirma exclusão da Postagem?"
+			showEffect="fade"
+			message="Deseja realmente excluir a Postagem?"
+			hideEffect="explode">
+			<h:form>
+				<p:commandButton value="Sim" action="#{postagemMB.remover}"
+					oncomplete="PF('postConfirmDialog').hide()" 
+					icon="ok16" />
+				<p:commandButton value="Não" actionListener="#{postagemMB.cancelar}"
+					oncomplete="PF('postConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+	
+
+	
+
+</ui:composition>

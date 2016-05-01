@@ -1,0 +1,102 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<div
+			style="width: 65%; float: left; margin-bottom: 10px; margin-left: 10px;">
+			<h:form id="tableForm">
+				<p:dataScroller value="#{amizadeMB.amigosUsuarioVisualizado}"
+					var="usuario" chunkSize="10" id="amigosDs">
+					<f:facet name="header">
+						<h:outputText value="Amigos" />
+					</f:facet>
+
+					<div class="amigo">
+						<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+							style="width:100%;">
+							<p:graphicImage
+								value="http://localhost:8080/splettpet/imgs/#{usuario.fotoNome}"
+								styleClass="fotoAmigo" />
+							<p:panelGrid columns="1">
+								<p:commandLink value="#{usuario.nome}" styleClass="label"
+									style="color: #6DB6D5; text-decoration: none; float: left; margin-top: -45px;"
+									action="perfil">
+									<f:setPropertyActionListener value="#{usuario}"
+										target="#{perfilMB.usuarioVisualizado}" />
+								</p:commandLink>
+							</p:panelGrid>
+						</p:panelGrid>
+					</div>
+
+					<p:commandButton value="Desfazer amizade"
+						rendered="#{perfilMB.isManagementAllowed()}"
+						action="#{amizadeMB.desfazerAmizade}"
+						style="float:right; margin-top: -18%; margin-right: 10px;"
+						update=":tableForm :menu_form">
+						<f:setPropertyActionListener value="#{usuario}"
+							target="#{amizadeMB.usuarioSelecionado}" />
+					</p:commandButton>
+				</p:dataScroller>
+			</h:form>
+		</div>
+
+		<div
+			style="width: 31%; float: right; margin-right: 10px; margin-top: -50px;">
+			<p:panel id="solicitacoes_amizade" style="margin-top: 50px;"
+				rendered="#{perfilMB.isManagementAllowed()}">
+				<f:facet name="header">
+					<h:outputText value="Solicitações de amizade" />
+				</f:facet>
+				<p:dataList emptyMessage="Nenhuma nova solicitação de amizade"
+					value="#{amizadeMB.solicitacoesAmizadeUsuarioVisualizado}"
+					type="definition" var="solicitacao">
+					<p:panel style="margin: 10px;">
+						<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+							style="width:100%;">
+							<p:graphicImage
+								value="http://localhost:8080/splettpet/imgs/#{solicitacao.usuarioOrigem.fotoNome}"
+								styleClass="fotoPostagem" />
+							<p:panelGrid columns="1">
+								<p:commandLink value="#{solicitacao.usuarioOrigem.nome}"
+									styleClass="label"
+									style="color: #6DB6D5; text-decoration: none; float: left; margin-top: -10px"
+									action="perfil">
+									<f:setPropertyActionListener
+										value="#{solicitacao.usuarioOrigem}"
+										target="#{perfilMB.usuarioVisualizado}" />
+								</p:commandLink>
+							</p:panelGrid>
+						</p:panelGrid>
+						<p:panelGrid columns="2">
+							<p:commandButton value="Aceitar" icon="ok16"
+								update=":solicitacoes_amizade :tableForm :menu_form"
+								action="#{amizadeMB.aceitarSolicitacao}">
+								<f:setPropertyActionListener
+									value="#{solicitacao.usuarioOrigem}"
+									target="#{amizadeMB.usuarioSolicitacao}" />
+							</p:commandButton>
+							<p:commandButton value="Recusar" icon="cancel16"
+								update=":solicitacoes_amizade"
+								action="#{amizadeMB.recusarSolicitacao}">
+								<f:setPropertyActionListener
+									value="#{solicitacao.usuarioOrigem}"
+									target="#{amizadeMB.usuarioSolicitacao}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:panel>
+				</p:dataList>
+			</p:panel>
+
+			<p:sticky target="solicitacoes_amizade">
+			</p:sticky>
+		</div>
+
+
+
+	</ui:define>
+</ui:composition>

@@ -1,0 +1,109 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<h:form>
+			<p:commandButton id="novaPost" value="Nova"
+				actionListener="#{postagemMB.criar}"
+				oncomplete="PF('novaPostagemDialog').show()"
+				update=":novaPostagemDlg :novaPostagem_form"
+				rendered="#{perfilMB.isManagementAllowed()}" />
+		</h:form>
+
+		<h:form id="tableForm">
+			<p:dataScroller value="#{postagemMB.postagens}" var="postagem"
+				chunkSize="10" id="postagensDs">
+				<f:facet name="header">
+					<h:outputText value="Postagens" />
+				</f:facet>
+				<p:panel style="width: 96%;" styleClass="post">
+					<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+						style="width:100%;">
+						<h:graphicImage
+							value="http://localhost:8080/splettpet/imgs/#{perfilMB.usuarioVisualizado.fotoNome}"
+							styleClass="fotoPostagem" />
+						<p:panelGrid columns="1" style="margin-left: 2%;">
+							<p:outputLabel value="#{postagem.usuario.nome}"
+								styleClass="label" style="color: #6DB6D5;" />
+							<h:outputText value="#{postagem.dataPostagem}"
+								style="font-size: 0.8em; color:gray">
+								<f:convertDateTime pattern="dd/MM/yyyy" locale="pt" />
+							</h:outputText>
+						</p:panelGrid>
+					</p:panelGrid>
+
+					<div style="margin-top: 5px; margin-bottom: 2px;">
+						<h:outputText styleClass="postText" value="#{postagem.texto}" />
+					</div>
+					<p:commandButton value="Ver Mais"
+						oncomplete="PF('postagemDialog').show()" update=":postagemDlg"
+						action="#{postagemMB.criarComentario()}">
+						<f:setPropertyActionListener value="#{postagem}"
+							target="#{postagemMB.postagemVisualizar}" />
+					</p:commandButton>
+				</p:panel>
+			</p:dataScroller>
+		</h:form>
+
+		<p:dialog id="novaPostagemDlg" widgetVar="novaPostagemDialog"
+			header="Nova Postagem" width="40%" modal="true" resizable="false"
+			closable="false" showEffect="clip" hideEffect="clip">
+			<h:form id="novaPostagem_form">
+
+				<h:panelGrid columns="1">
+					<p:inputTextarea rows="5" cols="60" counter="display"
+						maxlength="255" counterTemplate="{0} characters remaining."
+						autoResize="false" value="#{postagemMB.postagem.texto}" />
+					<h:outputText id="display" />
+				</h:panelGrid>
+
+				<p:commandButton id="enviarBt" value="Salvar" icon="salvar16"
+					update=":tableForm" action="#{postagemMB.salvarPostagem}"
+					oncomplete="if(!args.validationFailed) PF('novaPostagemDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('novaPostagemDialog').hide()"
+					update=":novaPostagem_form" immediate="true"
+					actionListener="#{postagemMB.cancelar}" />
+			</h:form>
+		</p:dialog>
+		
+		<p:dialog id="editarPostagemDlg" widgetVar="editarPostagemDialog"
+			header="Editar Postagem" width="40%" modal="true" resizable="false" draggable="false">
+			<h:form id="editarPostagem_form">
+
+				<h:panelGrid columns="1">
+					<p:inputTextarea rows="5" cols="60" counter="display"
+						maxlength="255" counterTemplate="{0} caracteres restantes."
+						autoResize="false" value="#{postagemMB.postagemVisualizar.texto}" />
+					<h:outputText id="display" />
+				</h:panelGrid>
+
+				<p:commandButton id="enviarBt" value="Salvar" icon="salvar16"
+					update=":tableForm" action="#{postagemMB.editarPostagem}"
+					oncomplete="if(!args.validationFailed) PF('editarPostagemDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('editarPostagemDialog').hide()"
+					update=":editarPostagem_form" immediate="true"
+					actionListener="#{postagemMB.cancelar}" />
+			</h:form>
+		</p:dialog>
+		
+
+		<p:dialog id="postagemDlg" widgetVar="postagemDialog"
+			header="Postagem" width="40%" modal="true" resizable="false"
+			showEffect="clip" hideEffect="clip">
+
+			<ui:include src="postagem.xhtml"></ui:include>
+
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

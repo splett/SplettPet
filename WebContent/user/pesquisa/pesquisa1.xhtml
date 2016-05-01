@@ -1,0 +1,126 @@
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jstl/core"
+	template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<p:growl id="msg" showDetail="true"></p:growl>
+		<p:panel>
+			<h:form id="pesquisaCidade_form">
+				<h:panelGrid columns="1" styleClass="CRUDform">
+					<h:outputLabel id="estadoLb" value="Estado:" for="estado" />
+					<p:autoComplete id="estado" value="#{enderecoMB.endereco.uf}"
+						size="15" completeMethod="#{enderecoDao.pesquisarPorEstado}"
+						converter="#{enderecoEstadoConverter}" dropdown="true"
+						required="true" requiredMessage="Estado é obrigatorio"
+						forceSelection="true" minQueryLength="0">
+						<p:ajax event="blur" update="pesquisaCidade_form:cidade" />
+					</p:autoComplete>
+					<p:message for="estado" />
+
+					<h:outputLabel id="cidadeLb" value="Cidade:" for="cidade" />
+					<p:autoComplete id="cidade" value="#{enderecoMB.endereco.cidade}"
+						size="15" completeMethod="#{enderecoMB.listarCidades()}"
+						converter="#{enderecoConverter}" dropdown="true" required="true"
+						requiredMessage="Cidade é obrigatoria" forceSelection="true"
+						minQueryLength="3">
+						<p:ajax event="blur" update="pesquisaCidade_form:bairro" />
+					</p:autoComplete>
+					<p:message for="cidade" />
+
+					<h:outputLabel id="bairroLb" value="Bairro:" for="bairro" />
+					<p:autoComplete id="bairro" value="#{enderecoMB.endereco.bairro}"
+						size="15" completeMethod="#{enderecoMB.listarBairros()}"
+						converter="#{enderecoBairroConverter}" dropdown="true"
+						required="true" requiredMessage="Bairro é obrigatorio"
+						forceSelection="true" minQueryLength="3" />
+					<p:message for="bairro" />
+
+					<h:outputLabel id="tipoLb" value="Tipo do Animal:" for="tipo" />
+					<p:autoComplete id="tipo" value="#{enderecoMB.tipoAnimal.nome}"
+						size="15" completeMethod="#{tipoAnimalDao.pesquisarPorNome}"
+						converter="#{tipoAnimalConverter}" dropdown="true"
+						forceSelection="true" minQueryLength="3" required="true"
+						requiredMessage="Tipo do Animal é obrigatorio">
+					</p:autoComplete>
+					<p:message for="tipo" />
+
+					<p:commandButton id="pesquisaDisponibilidade"
+						value="Pesquisar disponibilidade"
+						actionListener="#{enderecoMB.criarDatasPesquisa}"
+						oncomplete="PF('disponibilidadeDialog').show()" />
+
+
+
+
+					<p:commandButton id="buscarPessoas" value="Buscar"
+						actionListener="#{enderecoMB.setarUsuarios()}"
+						update=":pesquisa_form :msg" />
+				</h:panelGrid>
+			</h:form>
+		</p:panel>
+
+
+		<h:form id="pesquisa_form">
+
+			<p:dataScroller value="#{enderecoMB.usuarios}" var="usuario"
+				chunkSize="10" id="usuarioDs">
+
+				<f:facet name="header">
+					<h:outputText value="usuarios" />
+				</f:facet>
+
+				<div class="usuarios">
+					<p:panelGrid columns="2" columnClasses="coluna1,coluna2"
+						style="width:100%;">
+						<p:graphicImage library="img" name="android_icon.png"
+							style="width:110px; border-style: solid; border-width: 1px; border-color: #6DB6D5" />
+						<p:panelGrid columns="1">
+							<p:commandLink value="#{usuario.nome}" styleClass="label"
+								style="color: #6DB6D5; text-decoration: none; float: left; margin-top: -45px;"
+								action="perfil">
+								<f:setPropertyActionListener value="#{usuario}"
+									target="#{perfilMB.usuarioVisualizado}" />
+							</p:commandLink>
+						</p:panelGrid>
+					</p:panelGrid>
+				</div>
+
+			</p:dataScroller>
+		</h:form>
+
+		<p:dialog id="disponibilidadeDlg" widgetVar="disponibilidadeDialog"
+			header="Período busca" width="40%" height="40%" modal="true"
+			resizable="false" closable="false" showEffect="clip"
+			hideEffect="clip">
+			<h:form id="novaDisponibilidade_form">
+
+				<h:panelGrid columns="2">
+					<p:outputLabel for="inicio" value="Início do período" />
+					<p:outputLabel for="fim" value="Fim do período" />
+
+					<p:calendar id="inicio" mode="inline"
+						value="#{enderecoMB.dataInicial}"
+						mindate="#{disponibilidadeMB.dataHoje}" required="true"
+						requiredMessage="Data de inicio da busca é obrigatorio" />
+					<p:calendar id="fim" mode="inline" value="#{enderecoMB.dataFinal}"
+						mindate="#{disponibilidadeMB.dataHoje}" required="true"
+						requiredMessage="Data final da busca é obrigatorio" />
+				</h:panelGrid>
+
+				<p:commandButton id="salvarBt" value="Selecionar" icon="salvar16"
+					update=":msg"
+					oncomplete="if(!args.validationFailed) PF('disponibilidadeDialog').hide()" />
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('disponibilidadeDialog').hide()" update=":msg"
+					immediate="true" />
+
+			</h:form>
+		</p:dialog>
+
+	</ui:define>
+</ui:composition>

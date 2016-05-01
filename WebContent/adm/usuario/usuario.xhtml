@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+		<p:growl id="msg" showDetail="true"></p:growl>
+		<p:panel id="painelPrincipal" header="Gerenciamento de usuários">
+
+			<h:form>
+				<p:commandButton id="novoUsr" styleClass="botaoCRUD" value="Novo"
+					actionListener="#{usuarioMB.criar}"
+					oncomplete="PF('usrDialog').show()" update=":usrDlg" />					
+			</h:form>
+
+			<h:form id="tableForm">
+				<p:dataTable id="usuariosTable"
+					value="#{usuarioMB.usuarioLazyDataModel}" var="usr" rows="15"
+					rowkey="#{usr.id}" paginator="true" lazy="true"
+					filteredValue="#{usuarioMB.usuariosFiltered}"
+					emptyMessage="Nenhum registro encontrado">
+
+					<f:facet name="header">
+						<h:outputText value="Usuários cadastrados" />
+					</f:facet>
+
+					<p:column headerText="Nome" filterBy="#{usr.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{usr.nome}" />
+					</p:column>
+
+					<p:column headerText="E-mail" filterBy="#{usr.email}">
+						<h:outputText value="#{usr.email}" />
+					</p:column>
+
+					<p:column headerText="Regra">
+						<h:outputText value="#{usr.tipo.label}" />
+					</p:column>
+
+					<p:column headerText="Ações">
+						<p:panelGrid columns="2">
+							<p:commandButton id="editarUsr" value="Editar" icon="editar16"
+								update=":user_form" oncomplete="PF('usrDialog').show()">
+								<f:setPropertyActionListener value="#{usr}"
+									target="#{usuarioMB.usuario}" />
+							</p:commandButton>
+
+							<p:commandButton id="removerUsr" value="Remover" icon="remover16"
+								update=":confirm" oncomplete="PF('usrConfirmDialog').show()">
+								<f:setPropertyActionListener value="#{usr}"
+									target="#{usuarioMB.usuario}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+
+		<p:dialog id="usrDlg" widgetVar="usrDialog" header="Dados do usuário"
+			width="50%" height="40%" modal="true" resizable="false"
+			closable="false" draggable="true">
+			
+			<ui:include src="userCRUDForm.xhtml" />
+			
+		</p:dialog>
+
+		<p:confirmDialog id="confirm" widgetVar="usrConfirmDialog"
+			global="true" header="Confirma exclusão de usuário?"
+			showEffect="fade"
+			message="Deseja realmente excluir o
+				usuário: #{usuarioMB.usuario.nome}"
+			hideEffect="explode">
+			<h:form>
+				<p:commandButton value="Sim" actionListener="#{usuarioMB.remover}"
+					oncomplete="PF('usrConfirmDialog').hide()" update=":tableForm"
+					icon="ok16" />
+				<p:commandButton value="Não" actionListener="#{usuarioMB.cancelar}"
+					oncomplete="PF('usrConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+	</ui:define>
+</ui:composition>

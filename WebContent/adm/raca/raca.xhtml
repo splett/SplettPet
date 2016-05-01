@@ -1,0 +1,122 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" template="/layout/template.xhtml">
+
+	<ui:define name="body">
+
+		<p:growl id="msg" showDetail="true"/>
+		<p:panel id="painelPrincipal" header="Gerenciamento de Raças">
+			<h:form>
+				<p:commandButton id="novaRaca" styleClass="botaoCRUD" value="Novo"
+					actionListener="#{racaMB.criar}"
+					oncomplete="PF('racaDialog').show()" update=":racaDlg" />
+			</h:form>
+
+			<h:form id="tableForm">
+				<p:dataTable id="racaTable" var="raca" rows="15"
+					value="#{racaMB.racaLazyDataModel}" rowKey="#{raca.id}"
+					paginator="true" lazy="true"
+					filteredValue="#{racaMB.racasFiltered}"
+					emptyMessage="Nenhum registro encontrado">
+
+					<f:facet name="header">
+						<h:outputText value="Raças Cadastradas" />
+					</f:facet>
+
+					<p:column headerText="Nome" filterBy="#{raca.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{raca.nome}" />
+					</p:column>
+
+					<p:column headerText="Porte" filterBy="#{raca.porte}"
+						filterMatchMode="contains">
+						<h:outputText value="#{raca.porte}" />
+					</p:column>
+					
+					<p:column headerText="Tipo" filterBy="#{raca.tipoAnimal.nome}"
+						filterMatchMode="contains">
+						<h:outputText value="#{raca.tipoAnimal.nome}" />
+					</p:column>
+
+					<p:column headerText="Ações">
+						<p:panelGrid columns="2">
+							<p:commandButton id="editarRaca" value="Editar" icon="editar16"
+								update=":raca_form" oncomplete="PF('racaDialog').show()">
+								<f:setPropertyActionListener value="#{raca}"
+									target="#{racaMB.raca}" />
+							</p:commandButton>
+
+							<p:commandButton id="removerRaca" value="Remover"
+								icon="remover16" update=":confirm"
+								oncomplete="PF('racaConfirmDialog').show()">
+								<f:setPropertyActionListener value="#{raca}"
+									target="#{racaMB.raca}" />
+							</p:commandButton>
+						</p:panelGrid>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</p:panel>
+
+
+		<p:dialog id="racaDlg" widgetVar="racaDialog" header="Dados da Raça"
+			height="40%" modal="true" resizable="false" draggable="false">
+
+			<h:form id="raca_form">
+				<h:panelGrid columns="3" styleClass="CRUDform">
+
+					<h:outputLabel id="nomeLb" value="Nome:" for="nome" />
+					<p:inputText id="nome" value="#{racaMB.raca.nome}" size="50"
+						required="true" requiredMessage="Nome é obrigatório" />
+					<p:message for="nome" />
+
+					<h:outputLabel id="porteLb" value="Porte:" for="porte" />
+					<p:selectOneMenu id="porte" value="#{racaMB.raca.porte}"
+						required="true" requiredMessage="Porte é obrigatório">
+						<f:selectItem itemLabel="Selecione um" itemValue="" />
+						<f:selectItem itemLabel="Pequeno" itemValue="PEQUENO" />
+						<f:selectItem itemLabel="Médio" itemValue="MEDIO" />
+						<f:selectItem itemLabel="Grande" itemValue="GRANDE" />
+					</p:selectOneMenu>
+					<p:message for="porte" />
+
+					<h:outputLabel id="tipoLb" value="Tipo:" for="tipo" />
+					<p:autoComplete id="tipo" value="#{racaMB.raca.tipoAnimal}"
+						size="15" completeMethod="#{tipoAnimalDao.pesquisarPorNome}"
+						converter="#{tipoAnimalConverter}" dropdown="true"
+						forceSelection="true" minQueryLength="3" />
+					<p:message for="tipo" />
+
+				</h:panelGrid>
+				<br />
+
+				<p:commandButton style="margin-top:10px;" id="salvarBt"
+					value="salvar" icon="salvar16"
+					update=":tableForm:racaTable :raca_form :msg"
+					actionListener="#{racaMB.salvar}"
+					oncomplete="if(!args.validationFailed) PF('racaDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('racaDialog').hide()" update=":msg" immediate="true"
+					actionListener="#{racaMB.cancelar}" />
+			</h:form>
+		</p:dialog>
+
+		<p:confirmDialog id="confirm" widgetVar="racaConfirmDialog"
+			global="true" header="Confirma exclusão da raça?" showEffect="fade"
+			message="Deseja realmente excluir a raça: #{racaMB.raca.nome} ?"
+			hideEffect="explode">
+			<h:form>
+				<p:commandButton value="Sim" actionListener="#{racaMB.remover}"
+					oncomplete="PF('racaConfirmDialog').hide()" update=":tableForm"
+					icon="ok16" />
+				<p:commandButton value="Não" actionListener="#{racaMB.cancelar}"
+					oncomplete="PF('racaConfirmDialog').hide()" icon="cancelar16" />
+			</h:form>
+		</p:confirmDialog>
+
+	</ui:define>
+</ui:composition>

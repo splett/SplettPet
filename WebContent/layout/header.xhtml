@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:toolbar id="fixedTb" styleClass="fixedTb">
+		<f:facet name="left">
+			<h:form>
+				<p:commandLink action="perfil" value="SplettPet"
+					styleClass="fixedTbLink" ajax="false">
+					<f:setPropertyActionListener value="#{sessionMB.usuarioLogado}"
+						target="#{perfilMB.usuarioVisualizado}" />
+				</p:commandLink>
+			</h:form>
+		</f:facet>
+
+		<f:facet name="right">
+			<h:form id="infoForm">
+				<p:commandButton style="font-weight:bold; font-size:0.6em; "
+					id="opcoesAdministrativasBt" value="Opções Administrativas"
+					type="button" rendered="#{sessionMB.isUserAdm()}" />
+				<p:menu overlay="true" trigger="opcoesAdministrativasBt"
+					my="left top" at="left bottom">
+
+					<p:menuitem value="Usuários" outcome="admusuario" />
+
+					<p:menuitem value="Animais" outcome="admanimal" />
+
+					<p:menuitem value="Tipos de animais" outcome="admtipoanimal" />
+
+					<p:menuitem value="Raças" outcome="admraca" />
+
+					<p:menuitem value="Solicitações de raça"
+						outcome="/adm/solicitacoes/solicitacoesraca.xhtml" />
+
+					<p:menuitem value="Solicitações de tipo"
+						outcome="/adm/solicitacoes/solicitacoestipo.xhtml" />
+
+				</p:menu>
+
+				<span class="ui-separator"> <span
+					class="ui-icon ui-icon-grip-dotted-vertical" />
+				</span>
+
+				<p:commandLink style="font-weight:bold; font-size:0.6em; "
+					id="pesquisarBt" value="Procurar cuidador" type="button"
+					action="pesquisa">
+					<f:setPropertyActionListener value="#{enderecoMB.criar()}"
+						target="#{endereco}" />
+				</p:commandLink>
+
+				<span class="ui-separator"> <span
+					class="ui-icon ui-icon-grip-dotted-vertical" />
+				</span>
+
+				<h:outputText id="bemVindo" value="Bem vindo(a), "
+					style="font-weight:bold; font-size:0.7em;" />
+				<h:commandLink id="nome"
+					value="#{sessionMB.usuarioLogado.getPrimeiroNome()}"
+					style="font-weight:bold;  margin-right: auto; font-size:0.7em; text-decoration: none;"
+					action="perfil">
+					<f:setPropertyActionListener value="#{sessionMB.usuarioLogado}"
+						target="#{perfilMB.usuarioVisualizado}" />
+				</h:commandLink>
+
+				<span class="ui-separator"> <span
+					class="ui-icon ui-icon-grip-dotted-vertical" />
+				</span>
+
+				<h:outputLink
+					value="#{facesContext.externalContext.requestContextPath}/j_spring_security_logout">
+					<h:outputText value="Sair" styleClass="botaoSair" />
+				</h:outputLink>
+			</h:form>
+		</f:facet>
+	</p:toolbar>
+
+	<p:sticky target="fixedTb"></p:sticky>
+
+
+</ui:composition>

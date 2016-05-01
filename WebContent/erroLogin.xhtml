@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui" xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	template="/layout/templateLogin.xhtml">
+
+	<ui:define name="body">
+		<p:growl id="msg" showDetail="true"></p:growl>
+
+		<h:form>
+			<p:panel>
+				<center>
+					<h3>Erro no login, verifique seu usuário e senha e tente
+						novamente!</h3>
+					<br />
+					<p:commandButton action="index" value="Voltar!" />
+				</center>
+			</p:panel>
+		</h:form>
+
+		<p:dialog id="signDlg" widgetVar="signDialog" header="Cadastro"
+			width="40%" modal="true" resizable="false" closable="false"
+			showEffect="clip" hideEffect="clip">
+			<h:form id="sign_form">
+				<h:panelGrid columns="3" styleClass="CRUDform">
+
+					<h:outputLabel id="nomeLb" value="Nome:" for="nome" />
+					<p:inputText id="nome" value="#{usuarioMB.usuario.nome}" size="50"
+						required="true" requiredMessage="Nome é obrigatório" />
+					<p:message for="nome" />
+
+					<h:outputLabel id="EmailLb" value="Email:" for="email" />
+					<p:inputText id="email" value="#{usuarioMB.usuario.email}"
+						size="50" required="true"
+						requiredMessage="Endereço de e-mail é obrigatório"
+						validatorMessage="E-mail inválido">
+						<f:validateRegex
+							pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+						<p:ajax listener="#{usuarioMB.validarLogin}" update=":msg"
+							event="blur" />
+					</p:inputText>
+					<p:message id="emailMsg" for="email" />
+
+					<h:outputLabel id="senhaLb" value="Senha:" for="senha" />
+					<p:password id="senha" value="#{usuarioMB.usuario.senha}" size="50"
+						feedback="true" required="true"
+						requiredMessage="Senha é obrigatória" />
+					<p:message for="senha" />
+
+					<h:outputLabel id="generoLb" value="Gênero:" for="genero" />
+					<p:selectOneMenu id="genero" value="#{usuarioMB.usuario.genero}"
+						required="true" requiredMessage="Gênero é obrigatório">
+						<f:selectItem itemLabel="Selecione um" itemValue="" />
+						<f:selectItem itemLabel="Masculino" itemValue="MASCULINO" />
+						<f:selectItem itemLabel="Feminino" itemValue="FEMININO" />
+						<f:selectItem itemLabel="Outro" itemValue="OUTRO" />
+					</p:selectOneMenu>
+					<p:message for="genero" />
+
+					<h:outputLabel id="dtNascLb" value="Data Nascimento:" for="dtNasc" />
+					<p:calendar id="dtNasc" value="#{usuarioMB.usuario.dataNascimento}"
+						pattern="dd/MM/yyyy" navigator="true"></p:calendar>
+					<p:message for="dtNasc" />
+				</h:panelGrid>
+
+				<p:commandButton id="salvarBt" value="salvar" icon="salvar16"
+					update=":sign_form :msg" actionListener="#{usuarioMB.salvar}"
+					oncomplete="if(!args.validationFailed) PF('signDialog').hide()" />
+
+				<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+					oncomplete="PF('signDialog').hide()" update=":msg" immediate="true"
+					actionListener="#{usuarioMB.cancelar}" />
+
+			</h:form>
+		</p:dialog>
+	</ui:define>
+</ui:composition>

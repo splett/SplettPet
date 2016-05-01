@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<p:dialog id="privacidadeDlg" widgetVar="privacidadeDialog"
+		header="Privacidade" modal="true" resizable="false" closable="false"
+		draggable="false" showEffect="clip" hideEffect="clip" height="40%">
+		<h:form id="privacidade_form">
+			<p:selectBooleanCheckbox id="generoPublico"
+				value="#{configuracoesMB.usuario.genero_isPublico}" />
+			<h:outputText id="generoPublicoLb"
+				value="Todos podem ver meu gênero. " for="generoPublico" />
+			<br />
+			<p:selectBooleanCheckbox id="emailPublico"
+				value="#{configuracoesMB.usuario.email_isPublico}" />`
+				
+			<h:outputText id="emailPublicoLb" for="emailPublico"
+				value="Todos podem ver meu email." />
+			<br />
+			<p:selectBooleanCheckbox id="dataNascPublico"
+				value="#{configuracoesMB.usuario.dataNascimento_isPublico}" />
+			<h:outputText id="dataNascPublicoLb"
+				value="Todos podem ver minha data de nascimento. "
+				for="dataNascPublico" />
+			<br />
+			<p:selectBooleanCheckbox id="telefoneFixoPublico"
+				value="#{configuracoesMB.usuario.telefoneFixo_isPublico}" />
+			<h:outputText id="telefoneFixoPublicoLb"
+				value="Todos podem ver meu telefone fixo. "
+				for="telefoneFixoPublico" />
+			<br />
+			<p:selectBooleanCheckbox id="telefoneCelularPublico"
+				value="#{configuracoesMB.usuario.telefoneCelular_isPublico}" />
+			<h:outputText id="telefoneCelularPublicoLb"
+				value="Todos podem ver meu telefone celular. "
+				for="telefoneCelularPublico" />
+
+			<br />
+			
+			<p:selectBooleanCheckbox id="enderecoPublico"
+				value="#{configuracoesMB.usuario.endereco_isPublico}" />
+			<h:outputText id="enderecoPublicoLb"
+				value="Todos podem ver meu endereço. "
+				for="enderecoPublico" />
+
+			<br />
+			<p:commandButton id="salvarBt" value="salvar" icon="salvar16"
+				actionListener="#{configuracoesMB.salvar}"
+				oncomplete="if(!args.validationFailed) PF('privacidadeDialog').hide()" />
+
+			<p:commandButton id="cancelarBt" value="Cancelar" icon="cancelar16"
+				oncomplete="PF('privacidadeDialog').hide()" immediate="true"
+				actionListener="#{configuracoesMB.cancelar}" />
+		</h:form>
+	</p:dialog>
+</ui:composition>
